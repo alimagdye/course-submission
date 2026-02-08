@@ -1,11 +1,34 @@
 from django.db import models
 from django.contrib.auth.models import User
-from course.models import Course  # assuming Course model exists
+
+
+class Course(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+
+class Lesson(models.Model):
+    title = models.CharField(max_length=200)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+
+class Enrollment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.username} enrolled in {self.course.name}"
 
 
 class Question(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    text = models.CharField(max_length=200)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    text = models.CharField(max_length=255)
     grade = models.FloatField(default=1)
 
     def __str__(self):
@@ -14,7 +37,7 @@ class Question(models.Model):
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    text = models.CharField(max_length=200)
+    text = models.CharField(max_length=255)
     is_correct = models.BooleanField(default=False)
 
     def __str__(self):
