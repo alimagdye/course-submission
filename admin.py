@@ -18,6 +18,7 @@ class QuestionAdmin(admin.ModelAdmin):
     search_fields = ('text',)
 
 
+
 class LessonAdmin(admin.ModelAdmin):
     inlines = [QuestionInline]
     list_display = ('title', 'course')
